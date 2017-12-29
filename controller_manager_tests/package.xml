@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>controller_manager_tests</name>
   <version>0.12.0</version>
   <description>controller_manager_tests</description>
@@ -17,13 +17,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>rostest</build_depend>
-  <build_depend>controller_manager</build_depend>
-  <build_depend>controller_interface</build_depend>
-  <run_depend>rostest</run_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>controller_interface</run_depend>
-  <test_depend>rosservice</test_depend>
+  <depend>controller_interface</depend>
+  <depend>controller_manager</depend>
+  <depend>rostest</depend>
+
+  <exec_depend>rosservice</exec_depend>
 
   <export>
     <controller_interface plugin="${prefix}/test_controllers_plugin.xml"/>

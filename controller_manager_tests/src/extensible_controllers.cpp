@@ -52,18 +52,12 @@ void ExtensibleController::update(const ros::Time&, const ros::Duration&)
 }
 
 
-bool DerivedController::initRequest(hardware_interface::RobotHW* hw, ros::NodeHandle& nh, ros::NodeHandle& pnh,
-    controller_interface::ControllerBase::ClaimedResources& cr)
-{
-  return DerivedControllerInterface::initRequest(hw, nh, pnh, cr);
-}
-
-
 bool DerivedController::init(hardware_interface::RobotHW* robot_hw,
                              ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh)
 {
   // First initialize the base controller.
-  if (!ExtensibleController::init(robot_hw, root_nh, controller_nh))
+  base_controller.reset(new ExtendingController());
+  if (!base_controller->init(robot_hw, root_nh, controller_nh))
   {
     return false;
   }
@@ -76,7 +70,12 @@ bool DerivedController::init(hardware_interface::RobotHW* robot_hw,
   return true;
 }
 
-int DerivedController::helper()
+void DerivedController::update(const ros::Time& t, const ros::Duration& d)
+{
+  base_controller->update(t, d);
+}
+
+int ExtendingController::helper()
 {
   return 2;
 }
