@@ -58,7 +58,7 @@ namespace hardware_interface
 class RobotHW : public InterfaceManager
 {
 public:
-  RobotHW()
+  RobotHW() : parent_interface_manager_(nullptr)
   {
 
   }
@@ -78,7 +78,13 @@ public:
    *
    * \returns True if initialization was successful
    */
-  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle &robot_hw_nh) {return true;}
+  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw_nh) { return true; }
+
+  void setParentInterfaceManager(InterfaceManager* parent)
+  {
+    ROS_ASSERT(parent != nullptr);
+    parent_interface_manager_ = parent;
+  }
 
   /** \name Resource Management
    *\{*/
@@ -163,6 +169,21 @@ public:
    * \param period The time passed since the last call to \ref write
    */
   virtual void write(const ros::Time& time, const ros::Duration& period) {}
+
+protected:
+  template<class T>
+  T* getParentInterface()
+  {
+    if (!parent_interface_manager_)
+    {
+      ROS_ERROR("xxx");
+      return nullptr;
+    }
+    return parent_interface_manager_->get<T>();
+  }
+
+private:
+  InterfaceManager* parent_interface_manager_;
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;

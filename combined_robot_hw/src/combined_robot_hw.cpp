@@ -156,6 +156,7 @@ namespace combined_robot_hw
     bool initialized;
     try
     {
+      robot_hw->setParentInterfaceManager(this);
       initialized = robot_hw->init(root_nh_, c_nh);
     }
     catch(std::exception &e)
