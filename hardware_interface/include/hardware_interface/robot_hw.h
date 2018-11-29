@@ -172,11 +172,11 @@ public:
 
 protected:
   template<class T>
-  T* getParentInterface()
+  const T* getParentInterface()
   {
     if (!parent_interface_manager_)
     {
-      ROS_ERROR("xxx");
+      ROS_ERROR("Attempting to get parent interface manager, but it hasn't been set.");
       return nullptr;
     }
     return parent_interface_manager_->get<T>();

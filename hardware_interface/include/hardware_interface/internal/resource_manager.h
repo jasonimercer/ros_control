@@ -126,6 +126,24 @@ public:
   }
 
   /**
+   * \brief Get a const resource handle by name.
+   * \param name Resource name.
+   * \return Const resource associated to \e name. If the resource name is not found, an exception is thrown.
+   */
+  const ResourceHandle getHandle(const std::string& name) const
+  {
+    typename ResourceMap::const_iterator it = resource_map_.find(name);
+
+    if (it == resource_map_.end())
+    {
+      throw std::logic_error("Could not find resource '" + name + "' in '" +
+                             internal::demangledTypeName(*this) + "'.");
+    }
+
+    return it->second;
+  }
+
+  /**
    * \brief Combine a list of interfaces into one.
    *
    * Every registered handle in each of the managers is registered into the result interface
