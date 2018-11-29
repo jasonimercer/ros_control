@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(joint_limits_interface)
 
+set (CMAKE_CXX_STANDARD 14)
+
 find_package(urdfdom REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
