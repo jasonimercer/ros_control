@@ -171,15 +171,24 @@ public:
   virtual void write(const ros::Time& time, const ros::Duration& period) {}
 
 protected:
-  template<class T>
-  const T* getParentInterface()
+  template<class InterfaceT>
+  const auto getParentInterfaceHandle(std::string name)
   {
     if (!parent_interface_manager_)
     {
-      ROS_ERROR("Attempting to get parent interface manager, but it hasn't been set.");
-      return nullptr;
+      throw HardwareInterfaceException(
+          "Attempting to get hardware handle from parent RobotHW, but none has been set.");
     }
-    return parent_interface_manager_->get<T>();
+
+    InterfaceT* interface = parent_interface_manager_->get<InterfaceT>();
+    if (!interface)
+    {
+      throw HardwareInterfaceException(
+          "Parent RobotHW does not have interface of type " + internal::demangledTypeName<InterfaceT>());
+    }
+
+    // Will also throw HardwareInterfaceException if it can't find the named handle.
+    return interface->getHandle(name);
   }
 
 private:
