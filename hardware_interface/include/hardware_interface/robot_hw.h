@@ -58,7 +58,7 @@ namespace hardware_interface
 class RobotHW : public InterfaceManager
 {
 public:
-  RobotHW() : parent_interface_manager_(nullptr)
+  RobotHW()
   {
 
   }
@@ -78,13 +78,7 @@ public:
    *
    * \returns True if initialization was successful
    */
-  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw_nh) { return true; }
-
-  void setParentInterfaceManager(InterfaceManager* parent)
-  {
-    ROS_ASSERT(parent != nullptr);
-    parent_interface_manager_ = parent;
-  }
+  virtual bool init(ros::NodeHandle& root_nh, ros::NodeHandle& robot_hw_nh) {return true;}
 
   /** \name Resource Management
    *\{*/
@@ -136,6 +130,20 @@ public:
 
     return in_conflict;
   }
+
+  /** \brief The setParentInterfaceManager function may be called ahead of init in order to
+   * supply the RobotHW instance with a reference to another source of hardware interfaces,
+   * for example when multiple RobotHW plugins need to work together cooperatively and observe
+   * each other's state, as in CombinedRobotHW.
+   *
+   * \param parent A pointer to the parent InterfaceManager instance.
+   */
+  void setParentInterfaceManager(InterfaceManager* parent)
+  {
+    ROS_ASSERT(parent != nullptr);
+    parent_interface_manager_ = parent;
+  }
+
 /** \name Hardware Interface Switching
    *\{*/
 
@@ -192,7 +200,7 @@ protected:
   }
 
 private:
-  InterfaceManager* parent_interface_manager_;
+  InterfaceManager* parent_interface_manager_{nullptr};
 };
 
 typedef std::shared_ptr<RobotHW> RobotHWSharedPtr;

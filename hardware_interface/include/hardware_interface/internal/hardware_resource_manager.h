@@ -53,21 +53,21 @@ struct DontClaimResources;
  * {
  *   HardwareResourceManager<JointStateHandle> m;
  *   // Populate m
- *   m.getHandle("handle_name"); // DOES NOT claim the "handle_name" resource
+ *   m.getHandle("handle_name"); // DOES NOT claim the "handle_name" resource, returns const handle.
  * }
  *
  * // Explicitly set ClaimPolicy to DontClaimResources
  * {
  *   HardwareResourceManager<JointStateHandle, DontClaimResources> m;
  *   // Populate m
- *   m.getHandle("handle_name"); // DOES NOT claim the "handle_name" resource
+ *   m.getHandle("handle_name"); // DOES NOT claim the "handle_name" resource, returns const handle.
  * }
  *
  * // Explicitly set ClaimPolicy to ClaimResources
  * {
  *   HardwareResourceManager<JointHandle, ClaimResources> m;
  *   // Populate m
- *   m.getHandle("handle_name"); // DOES claim the "handle_name" resource
+ *   m.getHandle("handle_name"); // DOES claim the "handle_name" resource, returns mutable handle.
  * }
  *
  * \endcode
@@ -88,9 +88,9 @@ public:
   /**
    * \brief Get a mutable resource handle by name, claiming it exclusively.
    *
-   * \note If the \b ClaimPolicy template parameter is set to \b ClaimResources, calling this method will internally
-   * claim the resource.
-   * If set to \b DontClaimResources, calling this method will not claim the resource.
+   * \note This version of the method is selected when the \b ClaimPolicy template parameter
+   * on the class is set to \b ClaimResources.
+   *
    * \param name Resource name.
    * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
    */
@@ -111,11 +111,11 @@ public:
   }
 
   /**
-   * \brief Get a const resource handle by name.
+   * \brief Get a const resource handle by name, which does not claim it exclusively.
    *
-   * \note If the \b ClaimPolicy template parameter is set to \b ClaimResources, calling this method will internally
-   * claim the resource.
-   * If set to \b DontClaimResources, calling this method will not claim the resource.
+   * \note This version of the method is selected when the \b ClaimPolicy template parameter
+   * on the class is set to \b DontClaimResources.
+   *
    * \param name Resource name.
    * \return Resource associated to \e name. If the resource name is not found, an exception is thrown.
    */
@@ -135,8 +135,6 @@ public:
 
   /*\}*/
 };
-
-/** \endcond */
 
 }
 
